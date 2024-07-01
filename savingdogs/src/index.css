@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+@layer base {
+  html {
+    font-family: "Proxima Nova", system-ui, sans-serif;
+  }
+}
+
+@font-face {
+	font-family: sifonn_pro;
+	src: url('../public/fonts/SIFONN_PRO.otf');
+}
+
+
+* {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+html,body,#root {
+	height: 100%;
+}
+
+.page {
+	page-break-after: always;
+}
+
+#notistack-snackbar {
+	flex: 1!important;
+}
+
+
+@font-face {
+	font-family: sifonn_pro;
+	src: url('../public/fonts/SIFONN_PRO.otf');
+}
+
+@font-face {
+	font-family: tcc_light;
+	src: url('../public/fonts/TCCC-UnityText-Light.ttf');
+}
+
+@font-face {
+	font-family: tcc_medium;
+	src: url('../public/fonts/TCCC-UnityText-Medium.ttf');
+}
+
+@font-face {
+	font-family: tcc_bold;
+	src: url('../public/fonts/TCCC-UnityText-Bold.ttf');
+}
+
+@font-face {
+	font-family: poppins_regular;
+	src: url('../public/fonts/Poppins-Regular.ttf');
+}
+
+@font-face {
+	font-family: locomoType;
+	src: url('../public/fonts/Locomotype_GigaSansRegular.otf');
+}
+@font-face {
+	font-family: DMsans;
+	src: url('../public/fonts/DMSans_24pt-Regular.ttf');
+}
+
