@@ -7,52 +7,60 @@ interface DataProps {
     name?: string;
 }
 
-export default function LandingPage(data:DataProps) {
-  const navigate = useNavigate();
-  const [error, setError] = useState<string | null>(null);
-  const [dog, setDog] = useState<any>({
-    nombre: "",
-    encontrados: [],
-    perdidos: []
-    })
+export default function LandingPage(data: DataProps) {
+    const navigate = useNavigate();
+    const [error, setError] = useState<string | null>(null);
+    const [dog, setDog] = useState<any>({
+        nombre: "",
+        perrosPerdidos: []
+    });
+
     useEffect(() => {
-    let user = localStorage.getItem("user");
-    if (!user) {
-        navigate("/");
-    }
-    let data = JSON.parse(user!);
-    if (data !== null) {
-        navigate("/landing");
-    }
-    (async () => {
-        try {
-            let respuesta = await fetch(`http://localhost:4000/landing/${data.user.id}`);
-            if (respuesta.ok) {
-                let res = await respuesta.json();
-                console.log(JSON.stringify(res));
-                setDog(res);
+        const fetchUserData = async () => {
+            try {
+                let user = localStorage.getItem("user");
+                if (!user) {
+                    navigate("/");
+                    return;
+                }
+                let userData = JSON.parse(user);
+                if (userData === null || !userData.user || !userData.user.id) {
+                    navigate("/");
+                    return;
+                }
+                
+                let respuesta = await fetch(`http://localhost:8482/apiUsuario/usuario/${userData.user.id}`);
+                if (respuesta.ok) {
+                    let res = await respuesta.json();
+                    setDog(res);
+                    console.log(res);
+                } else {
+                    setError("Error al obtener los datos del usuario");
+                }
+            } catch (error) {
+                console.error("Error fetching student data:", error);
+                setError("Error al obtener los datos del usuario");
             }
-        } catch (error) {
-            console.error("Error fetching student data:", error);
-        }
-    })();
-}, [navigate]);
+        };
 
-    const handleClickPerroPerdido = (dog: string) => {
-        navigate(`/infoappear/${dog}`);
+        fetchUserData();
+    }, [navigate]);
+
+    const handleClickPerroPerdido = (dogId: string) => {
+        navigate(`/infoappear/${dogId}`);
     }
 
-    const handleClickPerroEncontrado = (dog: string) => {
-        navigate(`/infodesappear/${dog}`);
+    const handleClickPerroEncontrado = (dogId: string) => {
+        navigate(`/infodesappear/${dogId}`);
     }
 
     const handleClickRegistroPerdido = () => {
         navigate('/perdido');
-      }
+    }
 
-      const handleClickRegistroEncontrado = () => {
+    const handleClickRegistroEncontrado = () => {
         navigate('/encontrado');
-      } 
+    }
 
     return (
         <>
@@ -60,43 +68,37 @@ export default function LandingPage(data:DataProps) {
             <div className="flex flex-col justify-center items-center">
                 <div className="py-5">
                     <span className="font-dmsans text-[2rem]">
-                        Bienvenido {dog?.user?.nombre}
-                        {dog?.user?.arrays?.encontrado?.nombrecompleto}
-                        
+                        Bienvenido {dog?.nombre}
                     </span>
                 </div>
                 <div className="flex justify-between items-center w-full">
-                    <div className="w-[40%] h-[25rem] flex flex-col  ml-28 ">
-                        <div className="border-2 flex flex-col h-[25rem]  justify-center items-center p-5 pt-3">
+                    <div className="w-[40%] h-[25rem] flex flex-col ml-28">
+                        <div className="border-2 flex flex-col h-[25rem] justify-center items-center p-5 pt-3">
                             <span className="font-dmsans mb-5 text-[1.5rem]">
                                 Posibles personas que cuenten con su perro
                             </span>
 
                             <div className="flex flex-col items-center overflow-y-auto max-h-[70%] w-full h-full">
-                                {/*Aqui se cambiaria a lo de la BD */}
-                                {dog?.arrays?.perdidos && dog?.arrays?.perdidos.map((perdido: any, i: number) => {
-                            return (<Data key={i} text={perdido.nombrecompleto} onClick={() => handleClickPerroPerdido(perdido.id_perro)} color="#d2ff8c" />);
-                        })}
-                        {dog?.arrays?.perdidos.length === 0 && (<span>NO HAY PERSONAS QUE CUENTEN CON SU PERRO</span>)}
+                                {dog?.perrosPerdidos && dog?.perrosPerdidos.map((perdido: any, i: number) => (
+                                    <Data key={i} text={`${perdido.nombre}`} onClick={() => handleClickPerroPerdido(perdido.id_perdido)} color="#d2ff8c" />
+                                ))}
+                                {dog?.perrosPerdidos.length === 0 && (<span>NO HAY PERSONAS QUE CUENTEN CON SU PERRO</span>)}
                             </div>
-
                         </div>
                     </div>
-                    <div className="w-[40%] h-[25rem] flex flex-col mr-28 ">
+                    <div className="w-[40%] h-[25rem] flex flex-col mr-28">
                         <div className="border-2 flex flex-col h-[25rem] justify-center items-center p-5 pt-3">
                             <span className="font-dmsans mb-5 text-[1.5rem]">
                                 Personas que deseen contactarse con usted
                             </span>
 
                             <div className="flex flex-col items-center overflow-y-auto max-h-[70%] w-full h-full">
-                                {/*Aqui se cambiaria a lo de la BD */}
-                                {dog?.arrays?.encontrados && dog?.arrays?.encontrados.map((encontrado: any, i: number) => {
-                            return (<Data key={i} text={encontrado.nombrecompleto} onClick={() => handleClickPerroEncontrado(encontrado.id_perro)} color="#d2ff8c" />);
-                        })}
-                        {dog?.arrays?.encontrados.length === 0 && (<span>NO HAY PERSONAS QUE PODRIAN SER DUEÑAS DEL PERRO QUE REGISTRO</span>)}
+                                {dog?.perrosEncontrados && dog?.perrosEncontrados.map((encontrado: any, i: number) => (
+                                        <Data key={i} text={`${encontrado.nombre}`} onClick={() => handleClickPerroPerdido(encontrado.id_encontrado)} color="#d2ff8c" />
+                                    ))}
+                                {dog?.perrosEncontrados && dog?.perrosEncontrados.length === 0 && (<span>TODAVIA NO APARECE EL DUEÑO</span>)}
                             </div>
-
-                        </div>
+                            </div>
                     </div>
                 </div>
                 <div className="flex flex-row justify-between items-center w-full">

@@ -29,7 +29,8 @@ export default function InfoDesaparicion(){
         colonia:"",
         delegacion:"",
         estado:"",
-        cp:""
+        cp:"",
+        fotoFilePath: ""
         })
         useEffect(() => {
         let user = localStorage.getItem("user");
@@ -39,7 +40,7 @@ export default function InfoDesaparicion(){
         let data = JSON.parse(user!);
         (async () => {
             try {
-                let respuesta = await fetch(`http://localhost:4000/informacionperdido/${dog}`);
+                let respuesta = await fetch(`http://localhost:8482/apiPerroperdido/perroperdido/${dog}`);
                 if (respuesta.ok) {
                     let res = await respuesta.json();
                     console.log(JSON.stringify(res));
@@ -54,30 +55,33 @@ export default function InfoDesaparicion(){
     const handleClickRegresar = () => {
         navigate(`/landing`);
     }
+
+    const miImagen = `/images/${dogs.fotoFilePath}`;
+
     return(
         <div>
 
 <HeaderLeft />
             <div className=" flex flex-col items-center justify-center px-10 py-7 ">
                 <div className="flex w-full font-poppins_regular text-[3rem] mb-5">
-                {dogs?.user?.nombre + " " + dogs?.user?.ap + " " + dogs?.user?.am}
+                {dogs?.nombre + " " + dogs?.ap + " " + dogs?.am}
                 </div>
                 <div className="flex justify-between items-center w-full border-2 mx-16 p-7 py-7">
                     <div className="flex w-[35%]">
-                        <img className="w-full h-full" src="https://www.zooplus.es/magazine/wp-content/uploads/2019/06/franz%C3%B6sische-bulldogge-1024x683.jpg" alt="" />
+                        <img className="w-full h-full" src={miImagen} alt="" />
                     </div>
                     <div className="flex flex-col w-[60%] items-start">
                         <PetDissapear 
-                            raza={dogs?.perro?.raza}
-                            color={dogs?.perro?.color}
-                            Sexo={dogs?.perro?.sexo}
-                            Caracteristicas={dogs?.perro?.car_esp}
-                            Calle={dogs?.direccion?.calle}
-                            Colonia={dogs?.direccion?.colonia}
-                            Postal={dogs?.direccion?.cp}
-                            Delegación={dogs?.direccion?.delegacion}
-                            Estado={dogs?.direccion?.estado}
-                            Correo= {dogs?.perro?.correo}
+                            raza={dogs?.raza}
+                            color={dogs?.color}
+                            Sexo={dogs?.sexo}
+                            Caracteristicas={dogs?.car_esp}
+                            Calle={dogs?.calle}
+                            Colonia={dogs?.colonia}
+                            Postal={dogs?.cp}
+                            Delegación={dogs?.delegacion}
+                            Estado={dogs?.estado}
+                            Correo= {dogs?.correo}
                         />
 
                     </div>

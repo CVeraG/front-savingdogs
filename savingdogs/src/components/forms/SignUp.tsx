@@ -20,9 +20,8 @@ export default function SignUp(){
         e.preventDefault();
         
         // Concatenar nombre, apellido paterno y apellido materno en un solo campo
-        const fullName = `${name} ${fName} ${sName}`;
         
-        const data1 = { nombre: fullName, correo: email, password: password, ubicacion: ubicacion, telefono: telefono };
+        const data1 = { nombre: name,ap: fName, am: sName, correo: email, password: password, ubicacion: ubicacion, telefono: telefono };
         
         try {
             const response = await fetch('http://localhost:8482/apiUsuario/usuarios', {
