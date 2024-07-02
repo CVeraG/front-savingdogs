@@ -1,81 +1,81 @@
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import { ChangeEvent, useState } from "react";
-import Data from "../Data";
-import { useNavigate, Link } from "react-router-dom";
-import { useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
+import { Button, TextField } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 export default function DogLost() {
-  const [name, setName] = useState("");
-  const [paName, setPaName] = useState("");
-  const [maName, setMaName] = useState("");
-  const [petName, setPetName] = useState("");
-  const [color, setColor] = useState("");
-  const [raza, setRaza] = useState("");
-  const [sexo, setSexo] = useState("");
-  const [email, setEmail] = useState("");
-  const [calle, setCalle] = useState("");
-  const [caracteristicas, setCaracteristicas] = useState("");
-  const [colonia, setColonia] = useState("");
-  const [estado, setEstado] = useState("");
-  const [delegacion, setDelegacion] = useState("");
-  const [codigo, setCodigo] = useState("");
-  const [fotoFile, setFotoFile] = useState<File | "">("");
-  const [error, setError] = useState("");
+  const [name, setName] = useState('');
+  const [paName, setPaName] = useState('');
+  const [maName, setMaName] = useState('');
+  const [petName, setPetName] = useState('');
+  const [color, setColor] = useState('');
+  const [raza, setRaza] = useState('');
+  const [sexo, setSexo] = useState('');
+  const [email, setEmail] = useState('');
+  const [calle, setCalle] = useState('');
+  const [caracteristicas, setCaracteristicas] = useState('');
+  const [colonia, setColonia] = useState('');
+  const [estado, setEstado] = useState('');
+  const [delegacion, setDelegacion] = useState('');
+  const [codigo, setCodigo] = useState('');
+  const [fotoFilePath, setFotoFilePath] = useState<string>('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
+
   useEffect(() => {
-    let user = localStorage.getItem("user");
+    let user = localStorage.getItem('user');
     if (!user) {
-      navigate("/");
+      navigate('/');
     } else {
       let data = JSON.parse(user);
       console.log(data);
-      navigate("/perdido");
+      navigate('/perdido');
     }
   }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    const formData = new FormData();
-    formData.append("raza", raza);
-    formData.append("sexo", sexo);
-    formData.append("color", color);
-    formData.append("car_esp", caracteristicas);
-    formData.append("correo", email);
-    formData.append("nombre", name);
-    formData.append("ap", paName);
-    formData.append("am", maName);
-    formData.append("calle", calle);
-    formData.append("colonia", colonia);
-    formData.append("delegacion", delegacion);
-    formData.append("estado", estado);
-    formData.append("cp", codigo);
-    formData.append("nombrePerro", petName);
-
-    if (fotoFile) {
-      formData.append("foto", fotoFile);
-    }
-
+  
+    const payload = {
+      raza,
+      sexo,
+      color,
+      car_esp: caracteristicas,
+      correo: email,
+      nombre: name,
+      ap: paName,
+      am: maName,
+      calle,
+      colonia,
+      delegacion,
+      estado,
+      cp: codigo,
+      nombrePerro: petName,
+      foto: fotoFilePath,
+    };
+  
     try {
-      const response = await fetch("http://localhost:8482/apiPerroPerdido/registroPerdido", {
-        method: "POST",
-        body: formData,
+      const response = await fetch('http://localhost:8482/apiPerroperdido/registroPerdido', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
       });
-
+  
       const data = await response.json();
-
-      if (data.result == true) {
-        setError("El usuario se registró correctamente");
-        navigate("/landing");
+      console.log(data);
+  
+      if (data.result === true) {
+        setError('El usuario se registró correctamente');
+        navigate('/landing');
       } else {
-        setError("No se pudo registrar al usuario");
+        setError('No se pudo registrar al usuario');
       }
     } catch (error) {
-      setError("Hubo un error al comunicarse con el servidor");
+      setError('Hubo un error al comunicarse con el servidor');
     }
   };
-
+  
   return (
     <div className="flex flex-col justify-center items-center">
       <form onSubmit={handleSubmit} action="" className="flex flex-col">
@@ -83,7 +83,7 @@ export default function DogLost() {
           <div className="h-auto flex flex-col w-[30%]">
             <input
               type="file"
-              onChange={(e) => setFotoFile(e.target.files?.[0] || "")}
+              onChange={(e) => setFotoFilePath(e.target.files?.[0]?.name || '')}
             />
             <span className="mb-5 w-auto">
               <TextField
@@ -223,7 +223,7 @@ export default function DogLost() {
         <div className="flex items-end mt-5 justify-end">
           <Button
             className="w-[10rem]"
-            style={{ backgroundColor: "#4199FF" }}
+            style={{ backgroundColor: '#4199FF' }}
             type="submit"
             variant="contained"
             sx={{ mt: 2 }}
