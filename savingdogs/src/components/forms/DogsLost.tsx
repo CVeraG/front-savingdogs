@@ -58,7 +58,7 @@ export default function DogLost() {
     }
 
     try {
-      const response = await fetch("http://localhost:4000/registroPerdido", {
+      const response = await fetch("http://localhost:8482/apiPerroPerdido/registroPerdido", {
         method: "POST",
         body: formData,
       });
